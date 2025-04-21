@@ -22,6 +22,7 @@ The framework is designed for high-performance inspection and control of HTTP tr
 - **Scikit-learn** (Random Forest Classifier)
 - **Pandas** and **TF-IDF Vectorization** for data preprocessing
 - **Flask** for the administrative interface
+- **Beautiful Soup** and **Requests** for the website scraping
 
 ## License
 
