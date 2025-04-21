@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Include Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Admin Panel</h1>
+      <p>Manage domain access settings with ease</p>
+    </div>
+  </header>
+  <main class="container">
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search domains..." onkeyup="filterTable()">
+    </div>
+    <table id="domainTable">
+      <thead>
+        <tr>
+          <th>Domain</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for domain, data in dns_config.items() %}
+        <tr>
+          <td>{{ domain }}</td>
+          <td>
+            <span class="status-indicator status-{% if data.access == 'allowed' %}allowed{% else %}blocked{% endif %}">
+              {{ data.access }}
+            </span>
+          </td>
+          <td>
+            <form method="post" action="{{ url_for('toggle') }}" class="action-form">
+              <input type="hidden" name="domain" value="{{ domain }}">
+              {% if data.access == "allowed" %}
+              <input type="hidden" name="access" value="blocked">
+              <button type="submit" class="btn block">Block</button>
+              {% else %}
+              <input type="hidden" name="access" value="allowed">
+              <button type="submit" class="btn allow">Allow</button>
+              {% endif %}
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
+  <footer>
+    <p>&copy; 2025 Your Company. All rights reserved.</p>
+  </footer>
+  <!-- Simple script for filtering the table rows -->
+  <script>
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toLowerCase();
+      table = document.getElementById("domainTable");
+      tr = table.getElementsByTagName("tr");
+      // Start from index 1 to skip header row
+      for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0]; // Domain column
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          tr[i].style.display = txtValue.toLowerCase().indexOf(filter) > -1 ? "" : "none";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
